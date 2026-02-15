@@ -21,7 +21,7 @@ nombre = params.get('name', 'Colono')
 qr = params.get('qr', 'QR001')
 
 # URL del servidor del guardia (se actualiza después con túnel fijo)
-URL_SERVIDOR = "https://TU_TUNEL_CLOUDFLARE_AQUI/abrir"
+URL_SERVIDOR = "url = "https://powerpoint-holiday-payday-anymore.trycloudflare.com/abrir"r"
 
 if 'abriendo' not in st.session_state:
     st.session_state.abriendo = False
