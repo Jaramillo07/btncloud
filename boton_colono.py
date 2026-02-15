@@ -1,6 +1,6 @@
 """
-📱 BOTÓN PLUMA - ACCESO PARA COLONOS
-Funciona desde cualquier celular vía internet
+📱 BOTÓN PLUMA - PARA EL CEL DEL COLONO
+Versión conectada a Cloudflare Tunnel
 """
 
 import streamlit as st
@@ -13,20 +13,24 @@ st.set_page_config(
     layout="centered"
 )
 
-# ===== CONFIGURACIÓN =====
+# ================================
+# URL DEL SERVIDOR (GUARDIA)
+# ================================
+URL_SERVIDOR = "https://powerpoint-holiday-payday-anymore.trycloudflare.com/abrir"
 
-# Parámetros desde la URL
+# ================================
+# PARAMETROS PERSONALIZADOS
+# ================================
 params = st.query_params
 nombre = params.get('name', 'Colono')
 qr = params.get('qr', 'QR001')
 
-# URL del servidor del guardia (se actualiza después con túnel fijo)
-URL_SERVIDOR = "url = "https://powerpoint-holiday-payday-anymore.trycloudflare.com/abrir"r"
-
 if 'abriendo' not in st.session_state:
     st.session_state.abriendo = False
 
-# ===== ESTILOS =====
+# ================================
+# CSS BOTÓN GRANDE
+# ================================
 st.markdown("""
 <style>
     .stButton > button {
@@ -43,9 +47,6 @@ st.markdown("""
     .stButton > button:hover {
         transform: scale(1.02);
         box-shadow: 0 20px 50px rgba(39, 174, 96, 0.5);
-    }
-    .stButton > button:active {
-        transform: scale(0.98);
     }
     .header {
         text-align: center;
@@ -66,7 +67,9 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# ===== HEADER =====
+# ================================
+# HEADER
+# ================================
 st.markdown(f"""
 <div class="header">
     <h1>🏠 PORTÓN GIRASOLES</h1>
@@ -74,48 +77,49 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# ===== BOTÓN =====
+# ================================
+# BOTÓN
+# ================================
 if st.session_state.abriendo:
-    
+
     st.markdown("""
     <div class="success-box">
-        <h1 style="font-size: 100px; margin: 0;">🚗 ✅</h1>
+        <h1 style="font-size: 100px;">🚗 ✅</h1>
         <h2>¡PLUMA ABIERTA!</h2>
-        <p style="font-size: 24px;">Pase por favor...</p>
+        <p>Pase por favor...</p>
     </div>
     """, unsafe_allow_html=True)
-    
+
     progress = st.progress(0)
-    status = st.empty()
-    
+
     for i in range(100):
-        time.sleep(0.03)
+        time.sleep(0.02)
         progress.progress(i + 1)
-        status.text(f"⏱️ Cerrando en {3 * (100 - i) / 100:.1f}s...")
-    
+
     st.session_state.abriendo = False
     st.rerun()
 
 else:
-    
+
     if st.button("🚗\nABRIR\nPLUMA"):
+
         try:
             response = requests.post(
                 URL_SERVIDOR,
                 json={
-                    "nombre": nombre,
+                    "name": nombre,
                     "qr": qr
                 },
                 timeout=5
             )
-            
+
             if response.status_code == 200:
                 st.session_state.abriendo = True
                 st.rerun()
             else:
                 st.error(f"❌ Error del servidor: {response.status_code}")
-                
+
         except requests.exceptions.ConnectionError:
-            st.error("❌ No se pudo conectar al servidor del guardia")
+            st.error("❌ No se pudo conectar con el servidor del guardia")
         except Exception as e:
             st.error(f"❌ Error: {str(e)}")
